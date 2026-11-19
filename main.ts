@@ -39,5 +39,19 @@ if (
   process.exit(1);
 }
 
+// The url must be an X/Twitter post address:
+// https://x.com/<handle>/status/<digits> or
+// https://twitter.com/<handle>/status/<digits>, with an optional
+// www./mobile. prefix or /i/web/status/<digits> form. A query string
+// or fragment is allowed and ignored.
+const X_POST_URL =
+  /^https:\/\/(?:www\.|mobile\.)?(?:x\.com|twitter\.com)\/(?:[A-Za-z0-9_]+\/status\/\d+|i\/web\/status\/\d+)(?:[?#].*)?$/;
+
+const url = (post as { url: string }).url;
+if (!X_POST_URL.test(url)) {
+  console.error(`POST.json "url" is not a valid X post URL: ${url}`);
+  process.exit(1);
+}
+
 mkdirSync(OUTPUT_DIR, { recursive: true });
 copyFileSync(src, join(OUTPUT_DIR, "POST.json"));
